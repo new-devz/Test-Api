@@ -13,5 +13,6 @@ namespace API_Aplication.Model
         public string Name { get; set; }
         public string Gender { get; set; }
         public string Class { get; set; }
+        public DateTime Date { get; set; }
     }
 }

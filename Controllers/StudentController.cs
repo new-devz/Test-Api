@@ -28,15 +28,27 @@ namespace API_Aplication.Controllers
             AResponse<List<StudentViewModel>> aResponse = new AResponse<List<StudentViewModel>>();
             try
             {
-
-                //get all Students form the database
-                List<Student> Student = await _studentRepository.GetStudents();
+                //get all students in db
+                var retrivedstudents = await _studentRepository.GetStudents();
+                var studentViewModel = retrivedstudents.Select(x => new StudentViewModel 
+                {
+                    id = x.id,
+                    Name = x.Name,
+                    Gender = x.Gender,
+                    Class = x.Class
+                }).ToList();
+               
                 aResponse.Successful = true;
-                aResponse.Message = "";
-                aResponse.Data = Student;
+                aResponse.Message = "Retrived All Students";
+                aResponse.Data = studentViewModel;
 
-                return Ok(aResponse);
+                
+            } catch (Exception e)
+            {
+                aResponse.Successful = false;
+                aResponse.Message = e.Message;
             }
+            return Ok(aResponse);
         }
 
         // GET api/<StudentController>/5
@@ -48,8 +60,39 @@ namespace API_Aplication.Controllers
 
         // POST api/<StudentController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> AddStudent(StudentViewModel studentViewModel)
         {
+            //initialize AResponse
+            AResponse<Student> aResponse = new AResponse<Student>();
+            try
+            {
+                var student = new Student()
+                {
+                    Name = studentViewModel.Name,
+                    Class = studentViewModel.Class,
+                    Gender = studentViewModel.Gender,
+                    Date = DateTime.Now
+                };
+
+                Student studentCreated = await _studentRepository.CreateStudent(student);
+
+                if(studentCreated == null)
+                {
+                    throw new InvalidOperationException("could not add student to db");
+                }
+                aResponse.Message = "Successfully created Student";
+                aResponse.Data = studentCreated;
+                aResponse.Successful = true;
+
+                return Ok(aResponse);
+            }
+            catch (Exception e)
+            {
+                aResponse.Successful = false;
+                aResponse.Message = e.Message;
+
+                return Ok(aResponse);
+            }
         }
 
         // PUT api/<StudentController>/5
