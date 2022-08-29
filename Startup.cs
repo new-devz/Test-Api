@@ -36,6 +36,7 @@ namespace API_Aplication
 
             services.AddControllers();
             services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IProductsRepository, ProductsRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API_Aplication", Version = "v1" });
