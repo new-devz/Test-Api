@@ -15,6 +15,7 @@ namespace API_Aplication.Data
 
 		}
 		public DbSet<Student> Student { get; set; }
+		public DbSet<Products> Products { get; set; }
 
 	}
 }
