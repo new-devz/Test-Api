@@ -11,8 +11,10 @@ namespace API_Aplication.Repository
     public interface IProductsRepository
     {
         Task<Products> CreateProduct(Products products);
+        Task<Products> DeleteProduct(Products products);
         Task<Products> GetProductById(string ProductId);
         Task<List<Products>> GetProducts();
+        Task<Products> UpdateProducts(Products products);
     }
 
     public class ProductsRepository : IProductsRepository
@@ -63,5 +65,26 @@ namespace API_Aplication.Repository
             return product;
         }
 
+        /// <summary>
+        /// Update A Product
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Products> UpdateProducts(Products products)
+        {
+            _dbContext.Entry(products).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+            return products;
+        }
+
+        /// <summary>
+        /// Delete A Product
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Products> DeleteProduct(Products products)
+        {
+            _dbContext.Products.Remove(products);
+            await _dbContext.SaveChangesAsync();
+            return null;
+        }
     }
 }
